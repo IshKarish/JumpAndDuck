@@ -6,10 +6,12 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D _rb;
     private Animator _animator;
     private bool _canMove = true;
+    private float _playerScale;
 
     [Header("Speeds")]
-    [SerializeField] private float speed = 600;
-    [SerializeField] private float jumpForce = 5000;
+    [SerializeField] private float speed = 100;
+    [SerializeField] private float jumpForce = 300;
+    [SerializeField][Tooltip("That's hard to understand from the name so i meant how much force to apply when going from air to roll")] private float downRollForce = 600;
 
     [Header("Ground Check")] 
     [SerializeField] private float groundCheckDistance = 0.4f;
@@ -25,8 +27,11 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        _playerScale = transform.localScale.x;
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
+
+        _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
     private void Update()
@@ -38,6 +43,11 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         float horizontal = Input.GetAxisRaw("Horizontal");
+        Debug.Log(horizontal);
+        
+        if (horizontal > 0) transform.localScale = new Vector2(_playerScale, _playerScale);
+        else if (horizontal < 0) transform.localScale = new Vector2(-_playerScale, _playerScale);
+        
         if (_canMove) MoveHorizontal(horizontal);
     }
 
@@ -57,7 +67,7 @@ public class PlayerController : MonoBehaviour
 
     private void Roll()
     {
-        _rb.AddForce(new Vector2(0, -jumpForce));
+        _rb.AddForce(new Vector2(0, -downRollForce));
         
         _canMove = false;
         _animator.SetTrigger(rollTrigger);

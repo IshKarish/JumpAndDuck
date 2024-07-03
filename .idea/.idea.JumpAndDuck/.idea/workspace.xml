@@ -6,8 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="1eb1f92c-9e68-44ad-a869-6f7a15e340bb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.JumpAndDuck/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.JumpAndDuck/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animations/Idle.controller" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animations/Idle.controller.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Animations/Roll.anim" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animations/Roll.anim" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PlayerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PlayerController.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,6 +17,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/CameraFollow.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
@@ -91,7 +95,7 @@
       <option name="presentableId" value="Default" />
       <updated>1719959590558</updated>
       <workItem from="1719959592339" duration="20000" />
-      <workItem from="1719959665550" duration="4183000" />
+      <workItem from="1719959665550" duration="7170000" />
     </task>
     <servers />
   </component>
