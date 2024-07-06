@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     private bool _canMove = true;
     private float _playerScale;
 
+    [SerializeField] private Joystick joystick;
+    
     [Header("Speeds")]
     [SerializeField] private float speed = 100;
     [SerializeField] private float jumpForce = 300;
@@ -36,15 +38,16 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded()) Jump();
-        if (Input.GetKeyDown(KeyCode.C) && !IsGrounded()) Roll();
+        float vertical = joystick.Vertical;
+        
+        if (vertical >= .5f && IsGrounded()) Jump();
+        if (vertical <= -.5f && !IsGrounded()) Roll();
     }
 
     private void FixedUpdate()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        Debug.Log(horizontal);
-        
+        float horizontal = joystick.Horizontal;
+
         if (horizontal > 0) transform.localScale = new Vector2(_playerScale, _playerScale);
         else if (horizontal < 0) transform.localScale = new Vector2(-_playerScale, _playerScale);
         
