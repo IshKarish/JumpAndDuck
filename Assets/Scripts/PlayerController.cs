@@ -7,8 +7,8 @@ public class PlayerController : MonoBehaviour
     private Animator _animator;
     private bool _canMove = true;
     private float _playerScale;
-
-    [SerializeField] private Joystick joystick;
+    private Sprite _loadedSkin;
+    private float _horizontal;
     
     [Header("Speeds")]
     [SerializeField] private float speed = 100;
@@ -22,6 +22,11 @@ public class PlayerController : MonoBehaviour
     [Header("Animator stuff")]
     [SerializeField] private string runBool = "Run";
     [SerializeField] private string rollTrigger = "Roll";
+
+    [Header("Controls")] 
+    [SerializeField] private GameObject joystick;
+    [SerializeField] private GameObject buttons;
+    
     private bool IsGrounded()
     {
         return Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayer);
@@ -34,26 +39,60 @@ public class PlayerController : MonoBehaviour
         _animator = GetComponent<Animator>();
 
         _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+        _loadedSkin = SkinsManager.LoadSkinSprite();
+        SpriteRenderer sp = GetComponent<SpriteRenderer>();
+
+        if (_loadedSkin)
+        {
+            sp.sprite = _loadedSkin;
+            GetComponent<Animator>().enabled = false;
+        }
+        else sp.drawMode = SpriteDrawMode.Simple;
+
+        string controls = PlayerPrefs.GetString("Controls");
+        if (controls == "JOYSTICK")
+        {
+            joystick.SetActive(true);
+            buttons.SetActive(false);
+        }
+        else if (controls == "BUTTONS")
+        {
+            joystick.SetActive(false);
+            buttons.SetActive(true);
+        }
     }
 
     private void Update()
     {
-        float vertical = joystick.Vertical;
+        float vertical = joystick.GetComponent<Joystick>().Vertical;
         
         if (vertical >= .5f && IsGrounded()) Jump();
         if (vertical <= -.5f && !IsGrounded()) Roll();
     }
 
-    private void FixedUpdate()
+    public void JumpButtons()
     {
-        float horizontal = joystick.Horizontal;
-
-        if (horizontal > 0) transform.localScale = new Vector2(_playerScale, _playerScale);
-        else if (horizontal < 0) transform.localScale = new Vector2(-_playerScale, _playerScale);
-        
-        if (_canMove) MoveHorizontal(horizontal);
+        if (IsGrounded()) Jump();
+        else Roll();
     }
 
+    private void FixedUpdate()
+    {
+        if (_canMove && joystick.activeInHierarchy) _horizontal = joystick.GetComponent<Joystick>().Horizontal;
+
+        if (_horizontal > 0) transform.localScale = new Vector2(_playerScale, _playerScale);
+        else if (_horizontal < 0) transform.localScale = new Vector2(-_playerScale, _playerScale);
+        
+        if (_canMove) MoveHorizontal(_horizontal);
+    }
+
+    public void MoveHorizontal(int axis)
+    {
+        _horizontal = axis;
+        MoveHorizontal((float)axis);
+    }
+    
     private void MoveHorizontal(float axis)
     {
         float xVelocity = (axis * speed) * Time.deltaTime; 
@@ -71,9 +110,12 @@ public class PlayerController : MonoBehaviour
     private void Roll()
     {
         _rb.AddForce(new Vector2(0, -downRollForce));
-        
-        _canMove = false;
-        _animator.SetTrigger(rollTrigger);
+
+        if (!_loadedSkin)
+        {
+            _canMove = false;
+            _animator.SetTrigger(rollTrigger);
+        }
     }
 
     public void UnlockMovement()
