@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
@@ -9,6 +10,8 @@ public class PlayerController : MonoBehaviour
     private float _playerScale;
     private Sprite _loadedSkin;
     private float _horizontal;
+
+    [SerializeField] private Sprite godSkin;
     
     [Header("Speeds")]
     [SerializeField] private float speed = 100;
@@ -40,15 +43,23 @@ public class PlayerController : MonoBehaviour
 
         _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
-        _loadedSkin = SkinsManager.LoadSkinSprite();
         SpriteRenderer sp = GetComponent<SpriteRenderer>();
 
-        if (_loadedSkin)
+        if (!MainMenu.InGodMod)
         {
-            sp.sprite = _loadedSkin;
+            _loadedSkin = SkinsManager.LoadSkinSprite();
+            if (_loadedSkin)
+            {
+                sp.sprite = _loadedSkin;
+                GetComponent<Animator>().enabled = false;
+            }
+            else sp.drawMode = SpriteDrawMode.Simple;
+        }
+        else
+        {
+            sp.sprite = godSkin;
             GetComponent<Animator>().enabled = false;
         }
-        else sp.drawMode = SpriteDrawMode.Simple;
 
         if (Application.platform == RuntimePlatform.Android)
         {
@@ -88,6 +99,11 @@ public class PlayerController : MonoBehaviour
                 else Roll();
             }
         }
+
+        if (transform.position.y <= -2) Restart();
+
+        if (GameObject.FindGameObjectsWithTag("Collectable").Length == 0)
+            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public void JumpButtons()
@@ -151,5 +167,12 @@ public class PlayerController : MonoBehaviour
         GetComponent<BoxCollider2D>().enabled = false;
         
         this.enabled = false;
+
+        Invoke(nameof(Restart), 3);
+    }
+
+    void Restart()
+    {
+        SceneManager.LoadScene(0);
     }
 }

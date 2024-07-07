@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class EnemyAI : MonoBehaviour
 {
-    [SerializeField] private float speed = 600;
+    [SerializeField] private float speed = 80;
     
     [SerializeField] private float detectionRange = 1;
     [SerializeField] private LayerMask playerLayer;
@@ -13,13 +13,13 @@ public class EnemyAI : MonoBehaviour
     private Animator _animator;
     private Rigidbody2D _rb;
     
-    bool CanSeePlayer(out RaycastHit2D hit)
+    private bool CanSeePlayer(out RaycastHit2D hit)
     {
-        hit = Physics2D.Raycast(transform.position, Vector3.right, detectionRange, playerLayer);
+        hit = Physics2D.Raycast(transform.position, Vector2.right, detectionRange, playerLayer);
         return hit;
     }
-    
-    public bool IsHitting(out RaycastHit2D hit)
+
+    private bool IsHitting(out RaycastHit2D hit)
     {
         return CanSeePlayer(out hit) && isAttacking;
     }
@@ -37,7 +37,7 @@ public class EnemyAI : MonoBehaviour
             _animator.SetTrigger("Attack");
         }
 
-        if (IsHitting(out RaycastHit2D hit))
+        if (!MainMenu.InGodMod && IsHitting(out RaycastHit2D hit))
         {
             if (hit.transform.gameObject.CompareTag("Player"))
             {
