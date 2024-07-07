@@ -19,7 +19,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Assets/CreateCollectable.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/EnemyAI.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Collectable.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/SkinsManager.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -98,7 +98,7 @@
       <updated>1719959590558</updated>
       <workItem from="1719959592339" duration="20000" />
       <workItem from="1719959665550" duration="7170000" />
-      <workItem from="1720286305321" duration="16027000" />
+      <workItem from="1720286305321" duration="21105000" />
     </task>
     <servers />
   </component>

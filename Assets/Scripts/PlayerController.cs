@@ -50,25 +50,44 @@ public class PlayerController : MonoBehaviour
         }
         else sp.drawMode = SpriteDrawMode.Simple;
 
-        string controls = PlayerPrefs.GetString("Controls");
-        if (controls == "JOYSTICK")
+        if (Application.platform == RuntimePlatform.Android)
         {
-            joystick.SetActive(true);
-            buttons.SetActive(false);
+            string controls = PlayerPrefs.GetString("Controls");
+            if (controls == "JOYSTICK")
+            {
+                joystick.SetActive(true);
+                buttons.SetActive(false);
+            }
+            else if (controls == "BUTTONS")
+            {
+                joystick.SetActive(false);
+                buttons.SetActive(true);
+            }
         }
-        else if (controls == "BUTTONS")
+        else
         {
             joystick.SetActive(false);
-            buttons.SetActive(true);
+            buttons.SetActive(false);
         }
     }
 
     private void Update()
     {
-        float vertical = joystick.GetComponent<Joystick>().Vertical;
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            float vertical = joystick.GetComponent<Joystick>().Vertical;
         
-        if (vertical >= .5f && IsGrounded()) Jump();
-        if (vertical <= -.5f && !IsGrounded()) Roll();
+            if (vertical >= .5f && IsGrounded()) Jump();
+            if (vertical <= -.5f && !IsGrounded()) Roll();
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                if (IsGrounded()) Jump();
+                else Roll();
+            }
+        }
     }
 
     public void JumpButtons()
@@ -80,6 +99,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         if (_canMove && joystick.activeInHierarchy) _horizontal = joystick.GetComponent<Joystick>().Horizontal;
+        if (Application.platform != RuntimePlatform.Android) _horizontal = Input.GetAxisRaw("Horizontal");
 
         if (_horizontal > 0) transform.localScale = new Vector2(_playerScale, _playerScale);
         else if (_horizontal < 0) transform.localScale = new Vector2(-_playerScale, _playerScale);
@@ -121,5 +141,15 @@ public class PlayerController : MonoBehaviour
     public void UnlockMovement()
     {
         _canMove = true;
+    }
+
+    public void Kill()
+    {
+        if (GetComponent<SpriteRenderer>().drawMode == SpriteDrawMode.Simple) _animator.SetTrigger("Death");
+        
+        _rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        GetComponent<BoxCollider2D>().enabled = false;
+        
+        this.enabled = false;
     }
 }
